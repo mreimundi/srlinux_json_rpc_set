@@ -1,0 +1,62 @@
+{
+    "jsonrpc": "2.0",
+    "id": 0,
+    "method": "set",
+    "params": {
+        "commands": [
+            {
+                "action": "update",
+                "path": "/routing-policy",
+                "value": {
+                    "prefix-set": [
+                        {
+                            "name": "{{ routing_policy.prefix_set_name }}",
+                            "prefix": [
+                                {
+                                    "ip-prefix": "{{ routing_policy.prefix_set_ip }}",
+                                    "mask-length-range": "8..32"
+                                }
+                            ]
+                        }
+                    ],
+                    "policy": [
+                        {
+                            "name": "export-hosts",
+                            "default-action": {
+                                "reject": {}
+                            },
+                            "statement": [
+                                {
+                                    "sequence-id": 10,
+                                    "match": {
+                                        "prefix-set": "loopbacks"
+                                    },
+                                    "action": {
+                                        "accept": {}
+                                    }
+                                }
+                            ]
+                        },
+                        {
+                            "name": "{{ routing_policy.policy_name }}",
+                            "default-action": {
+                                "reject": {}
+                            },
+                            "statement": [
+                                {
+                                    "sequence-id": 10,
+                                    "match": {
+                                        "prefix-set": "{{ routing_policy.prefix_set_name }}"
+                                    },
+                                    "action": {
+                                        "accept": {}
+                                    }
+                                }
+                            ]
+                        }
+                    ]
+                }
+            }
+        ]
+    }
+}

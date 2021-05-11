@@ -1,0 +1,37 @@
+--- # template example
+- hosts: localhost
+  gather_facts: no
+  become: yes
+  vars:
+    node_name: spine2
+
+  tasks:
+    - name: Creates directory
+      file:
+        path: /root/srlinux_json_rpc_set/configuration_dc/{{ node_name }}/
+        state: directory
+    - name: Configuring interface block for {{ node_name }}
+      template:
+        src: /root/srlinux_json_rpc_set/j2-templates/interface_template.j2
+        dest: /root/srlinux_json_rpc_set/configuration_dc/{{ node_name }}/{{ node_name }}_interface.json
+
+    - name: Configuring network instance block for {{ node_name }}
+      template:
+        src: /root/srlinux_json_rpc_set/j2-templates/network_instance_template.j2
+        dest: /root/srlinux_json_rpc_set/configuration_dc/{{ node_name }}/{{ node_name }}_network_instance.json
+
+    - name: Creating routing policy block
+      template:
+        src: /root/srlinux_json_rpc_set/j2-templates/routing_policy_template.j2
+        dest: /root/srlinux_json_rpc_set/configuration_dc/{{ node_name }}/{{ node_name }}_routing_policy.json
+
+    - name: Creating BGP block
+      template:
+        src: /root/srlinux_json_rpc_set/j2-templates/bgp_template.j2
+        dest: /root/srlinux_json_rpc_set/configuration_dc/{{ node_name }}/{{ node_name }}_bgp.json
+
+    - name: Creating full Configuration
+      template:
+        src: /root/srlinux_json_rpc_set/j2-templates/dc_template.j2
+        dest: /root/srlinux_json_rpc_set/configuration_dc/{{ node_name }}/{{ node_name }}_dc.json
+
